@@ -1,0 +1,152 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header Styles */
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+}
+
+/* Form Styles */
+form {
+  margin: 20px auto;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="date"],
+form select,
+form button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+form input[type="text"],
+form input[type="date"],
+form select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+form button[type="submit"] {
+  margin-top: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Weather Graph Styles */
+#weatherGraph {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Temperature Stats Styles */
+#temperatureStats {
+  display: none;
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#temperatureStats h2 {
+  margin: 0 0 10px;
+}
+
+#temperatureStats p {
+  margin: 0;
+}
+
+#temperatureStats span {
+  font-weight: bold;
+}
+#weatherGraph canvas {
+  display: block;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Today's Weather Styles */
+#todaysWeather {
+  display: none;
+
+  margin: 20px auto;
+  max-width: 440px;
+  text-align: center;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding-top: 1px;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  padding-top: 0;
+}
+
+#weatherInfo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+  margin: 0 10px;
+}
+
+.weather-info img {
+  width: 50px;
+  height: auto;
+}
+.weather-info #weatherInfo {
+  margin: 0 10px;
+}
+
+/* Error Message Styles */
+#error {
+  display: none;
+  margin-top: 20px;
+  margin: 20px auto;
+  max-width: 424px;
+  padding: 10px;
+  background-color: #ffd2d2;
+  border: 1px solid #d8000c;
+  color: #d8000c;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+}
+
+#error p {
+  margin: 0;
+  padding: 0;
+}
