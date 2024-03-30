@@ -28,13 +28,13 @@ Before running the project, make sure you have a modern web browser installed.
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/IsmailTBaysal/Historical-Weather-Visualization
+   git clone https://github.com/IsmailTBaysal/Weatherwise-Web
    ```
 
 2. **Navigate to the project directory**
 
    ```bash
-   cd weatherwise-web
+   cd Weatherwise-Web
    ```
 
 3. **Open the project**
