@@ -1,20 +1,105 @@
-/* Global Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
 body {
-  font-family: Arial, sans-serif;
+  height: 100%;
   margin: 0;
-  padding: 0;
 }
 
-/* Header Styles */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: "Nunito", sans-serif;
+  background-color: #f4f4f4;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
 header {
-  background-color: #333;
-  color: #fff;
-  padding: 20px;
+  background-color: #2c3e50;
+  color: #ffffff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.logo-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo img {
+  height: 40px;
+  margin-right: 20px;
+}
+
+footer {
+  width: 100%;
   text-align: center;
 }
 
-header h1 {
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
   margin: 0;
+}
+
+.main-nav li:not(:last-child) {
+  margin-right: 25px;
+}
+
+.main-nav a {
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 5px 0;
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #2193b0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+  transform-origin: right;
+}
+
+.main-nav a:hover::after,
+.main-nav a:focus::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #ecf0f1;
 }
 
 /* Form Styles */
@@ -50,7 +135,19 @@ form select {
 
 form button[type="submit"] {
   margin-top: 10px;
-  background-color: #333;
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button[type="button"] {
+  display: none;
+  margin: 20px auto;
+  max-width: 424px;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #2c3e50;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -71,7 +168,7 @@ form button[type="submit"] {
 #temperatureStats {
   display: none;
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 650px;
   padding: 20px;
   background-color: #f2f2f2;
   border-radius: 5px;
@@ -95,32 +192,35 @@ form button[type="submit"] {
   border: 1px solid #ddd;
 }
 
-/* Today's Weather Styles */
 #todaysWeather {
   display: none;
-
-  margin: 20px auto;
-  max-width: 440px;
+  margin: 40px auto;
+  max-width: 320px;
+  background: linear-gradient(to right, #6dd5ed, #2193b0);
+  color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   text-align: center;
-  background-color: #f2f2f2;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding-top: 1px;
 }
 
 .weather-info {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  padding-top: 0;
+}
+
+.weather-info img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 #weatherInfo {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  color: #007bff;
-  margin: 0 10px;
+  margin: 0;
 }
 
 .weather-info img {
@@ -149,4 +249,53 @@ form button[type="submit"] {
 #error p {
   margin: 0;
   padding: 0;
+}
+#options {
+  display: none;
+  max-width: 400px;
+  margin: 20px auto;
+}
+#options button:not(:first-child) {
+  margin-left: 10px;
+}
+#options button:first-child {
+  margin-right: 10px;
+}
+#options button {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* FORECAST */
+
+#forecast-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.day-forecast {
+  margin: 5px;
+  max-width: 320px;
+  background: linear-gradient(to right, #6dd5ed, #2193b0);
+  color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  text-align: center;
+}
+
+.day-forecast h3 {
+  margin-top: 0;
+}
+main h1 {
+  text-align: center;
 }

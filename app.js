@@ -31,44 +31,27 @@ const weatherCodeToIcon = {
 
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
-  const today = new Date();
-  const maxDate = new Date(today);
-  maxDate.setDate(maxDate.getDate() - 2);
-
-  // Format the date as YYYY-MM-DD
-  const maxDateValue = maxDate.toISOString().split("T")[0];
-
-  // Set the max attribute for startDate and endDate inputs
-  document.getElementById("startDate").setAttribute("max", maxDateValue);
-  document.getElementById("endDate").setAttribute("max", maxDateValue);
 
   // Form Submit
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     document.getElementById("error").style.display = "none";
-
-    document.getElementById("temperatureStats").style.display = "block";
+    document.getElementById("sevenDayForecast").style.display = "block";
     document.getElementById("todaysWeather").style.display = "block";
 
     const city = document.getElementById("city").value;
     const state = document.getElementById("state").value;
-    const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
 
-    // Check if start date is before end date
-    if (new Date(startDate) > new Date(endDate)) {
-      alert("Start date must be before end date.");
-      return;
-    }
     const { latitude, longitude } = await convertCityStateToLatLong(
       city,
       state
     );
     console.log("latitude", latitude);
     console.log("longitude", longitude);
+    localStorage.setItem("latitude", latitude);
+    localStorage.setItem("longitude", longitude);
 
-    fetchWeatherData(latitude, longitude, startDate, endDate);
     fetchCurrentWeather(latitude, longitude);
   });
 });
@@ -112,20 +95,6 @@ async function convertCityStateToLatLong(city, userState) {
     });
 }
 
-async function fetchWeatherData(latitude, longitude, startDate, endDate) {
-  const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}&daily=temperature_2m_max,temperature_2m_min`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Failed to fetch weather data");
-    const data = await response.json();
-
-    displayTemperatureData(data);
-  } catch (error) {
-    console.error("Error fetching weather data:", error);
-  }
-}
-
 async function fetchCurrentWeather(latitude, longitude) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
 
@@ -140,60 +109,6 @@ async function fetchCurrentWeather(latitude, longitude) {
   }
 }
 
-function displayTemperatureData(data) {
-  const weatherChartElement = document.getElementById("weatherChart");
-  if (!weatherChartElement) return;
-
-  if (
-    !data ||
-    !data.daily ||
-    !data.daily.temperature_2m_max ||
-    !data.daily.temperature_2m_min
-  ) {
-    displayError("No Data for the City!");
-    return;
-  }
-
-  const ctx = weatherChartElement.getContext("2d");
-  const maxTemps = data.daily.temperature_2m_max;
-  const minTemps = data.daily.temperature_2m_min;
-  const dates = data.daily.time;
-
-  const chartHeight = weatherChartElement.height;
-  const chartWidth = weatherChartElement.width;
-  const maxTemp = Math.max(...maxTemps, ...minTemps);
-  const minTemp = Math.min(...minTemps, ...maxTemps);
-
-  ctx.clearRect(0, 0, chartWidth, chartHeight); // Clear previous chart
-
-  drawAxisLabelsAndLegend(
-    ctx,
-    dates,
-    maxTemp,
-    minTemp,
-    chartWidth,
-    chartHeight
-  );
-  drawTemperatureLines(
-    ctx,
-    maxTemps,
-    "red",
-    maxTemp,
-    minTemp,
-    chartWidth,
-    chartHeight
-  );
-  drawTemperatureLines(
-    ctx,
-    minTemps,
-    "blue",
-    maxTemp,
-    minTemp,
-    chartWidth,
-    chartHeight
-  );
-}
-
 function displayCurrentWeather(data) {
   const weatherIcon = document.querySelector("#todaysWeather img");
   const weatherInfo = document.getElementById("weatherInfo");
@@ -204,15 +119,15 @@ function displayCurrentWeather(data) {
   }
 
   // Retrieve the weather code from the API response
-  const weatherCode = String(data.current_weather.weathercode); 
+  const weatherCode = String(data.current_weather.weathercode);
 
   // Determine the icon file based on the weather code
-  const iconFile = weatherCodeToIcon[weatherCode] || "default"; 
+  const iconFile = weatherCodeToIcon[weatherCode] || "default";
 
   // Update the src attribute of the img tag
   weatherIcon.src = `icons/${iconFile}.svg`;
 
-  weatherInfo.textContent = `Current Temperature: ${data.current_weather.temperature}°C`;
+  weatherInfo.textContent = `Current Temperature: ${data.current_weather.temperature}°C, Windspeed: ${data.current_weather.windspeed} km/h`;
 }
 
 function displayError(message) {
@@ -224,93 +139,8 @@ function displayError(message) {
   errorMessageElement.textContent = message;
   document.getElementById("error").style.display = "block";
 
-  // Hide the weather and temperature sections
+  // Hide the forcast, weather and temperature sections
+  document.getElementById("sevenDayForecast").style.display = "none";
   todaysWeatherElement.style.display = "none";
   temperatureStatsElement.style.display = "none";
-}
-
-function drawTemperatureLines(
-  ctx,
-  temperatures,
-  color,
-  maxTemp,
-  minTemp,
-  chartWidth,
-  chartHeight
-) {
-  ctx.beginPath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2; 
-
-  temperatures.forEach((temp, index) => {
-    const x = (index / (temperatures.length - 1)) * chartWidth;
-    const y = scaleTemp(temp, minTemp, maxTemp, chartHeight);
-    if (index === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  });
-
-  ctx.stroke();
-}
-
-function drawAxisLabelsAndLegend(
-  ctx,
-  dates,
-  maxTemp,
-  minTemp,
-  chartWidth,
-  chartHeight
-) {
-  const dateInterval = Math.floor(dates.length / 6); 
-  ctx.font = "12px Arial, sans-serif"; 
-  ctx.fillStyle = "#333"; 
-
-  // Draw horizontal grid lines and Y-axis labels
-  const numGridLines = 5; // horizontal grid lines
-  ctx.strokeStyle = "#eee";
-  ctx.lineWidth = 1;
-
-  for (let i = 0; i <= numGridLines; i++) {
-    const temp = Math.round(minTemp + ((maxTemp - minTemp) * i) / numGridLines);
-    const y = scaleTemp(temp, minTemp, maxTemp, chartHeight);
-    ctx.fillText(`${temp}°C`, 0, y); // Y-axis labels
-
-    // Draw horizontal grid line
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(chartWidth, y);
-    ctx.stroke();
-  }
-
-  // Draw X-axis labels (dates)
-  dates.forEach((date, index) => {
-    if (index % dateInterval === 0) {
-      const x = (index / (dates.length - 1)) * chartWidth;
-      ctx.fillText(new Date(date).toLocaleDateString(), x, chartHeight - 10);
-    }
-  });
-
-  // Draw legend
-  drawLegend(ctx, chartWidth, chartHeight);
-}
-
-function drawLegend(ctx, chartWidth, chartHeight) {
-  ctx.fillStyle = "red";
-  ctx.fillRect(chartWidth - 120, 20, 10, 10); // Max Temp color
-  ctx.fillStyle = "#333";
-  ctx.fillText("Max Temp", chartWidth - 100, 30);
-
-  ctx.fillStyle = "blue";
-  ctx.fillRect(chartWidth - 120, 40, 10, 10); // Min Temp color
-  ctx.fillText("Min Temp", chartWidth - 100, 50);
-}
-
-function scaleTemp(temp, minTemp, maxTemp, chartHeight) {
-  return (
-    chartHeight -
-    50 -
-    ((temp - minTemp) / (maxTemp - minTemp)) * (chartHeight - 100)
-  );
 }

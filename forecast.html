@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weatherwise Web</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <header>
+        <div class="logo-title-container">
+            <a href="#" class="header-logo"><img src="icons/weather-forecast.png" alt="Weatherwise Web Logo"></a>
+            <h1>Weatherwise Web</h1>
+        </div>
+
+        <nav class="main-nav" id="mainNav">
+            <ul class="nav-list" id="navList">
+                <li><a href="homepage.html">Today's Weather</a></li>
+                <li><a href="weatherGraph.html">Historical Graph</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+
+        <h1>7-Day Weather Forecast</h1>
+        <div id="forecast-container"></div>
+
+        <div id="error">
+            <p id="errorMessage"></p>
+        </div>
+        <button type="button" id="back-button" onclick="location.href='homepage.html';">Back</button>
+
+    </main>
+
+    <footer>
+        <p>© 2024 Weatherwise Web. All rights reserved.</p>
+    </footer>
+
+    <script src="forecast.js"></script>
+</body>
+
+</html>
